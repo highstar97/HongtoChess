@@ -4,6 +4,7 @@
 #include "BaseChampion.generated.h"
 
 class UTexture2D;
+class UChampionStatComponent;
 
 UENUM()
 enum class ECountry : uint8
@@ -11,13 +12,15 @@ enum class ECountry : uint8
 	WE,
 	CHOCK,
 	OH,
-	HAN
+	HAN,
+	NONE
 };
 
 UENUM()
 enum class ESynergy : uint8
 {
 	DOWONGYEOLUI,
+	GWANUFANCLUB
 };
 
 UCLASS()
@@ -56,15 +59,12 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Champion")
 	TArray<ESynergy> Synergy;
 
-	//UPROPERTY(EditAnywhere, Category = "Stat")
-	//UStat Stat;
+	UPROPERTY(EditAnywhere, Category = "Stat")
+	UChampionStatComponent* ChampionStat;
 	
 	//UPROPERTY(VisibleDefaultsOnly, Category = "Skill")
 	//USkill Skill;
 
 	//UPROPERTY(EditAnywhere, Category = "Item")
 	//TArray<UItem*> Item;
-
-	UPROPERTY(VisibleDefaultsOnly, Category = "Champion")
-	UTexture2D* Picture;
 };
