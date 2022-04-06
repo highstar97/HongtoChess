@@ -10,4 +10,6 @@ class HONGTOCHESS_API AJoJo : public ABaseChampion
 
 public:
 	AJoJo();
+
+	virtual void BeginPlay();
 };

@@ -3,6 +3,7 @@
 #include "Components/ActorComponent.h"
 #include "ChampionStatComponent.generated.h"
 
+struct FHCStatData;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class HONGTOCHESS_API UChampionStatComponent : public UActorComponent
@@ -19,6 +20,9 @@ public:
 	void UpgradeStat();
 
 	void InitStatData(int SerialNumber);
+
+public:
+	FHCStatData* CurrentStatData = nullptr;
 
 private:
 	UPROPERTY(Transient, EditAnywhere, Category = "Stat", meta = (AllowPrivateAccess = true))

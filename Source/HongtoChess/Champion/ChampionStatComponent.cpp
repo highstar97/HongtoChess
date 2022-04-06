@@ -1,4 +1,6 @@
 #include "Champion/ChampionStatComponent.h"
+#include "HCGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 UChampionStatComponent::UChampionStatComponent()
 {
@@ -34,5 +36,26 @@ void UChampionStatComponent::UpgradeStat()
 void UChampionStatComponent::InitStatData(int SerialNumber)
 {
 	// 엑셀 데이터에서 SerialNumber에 맞는 데이터를 불러와서 1성 Stat에 대입
-	
+	UHCGameInstance* HCGameInstance = Cast<UHCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (nullptr == HCGameInstance)
+	{
+		return;
+	}
+
+	CurrentStatData = HCGameInstance->GetHCStatData(SerialNumber);
+	if (nullptr != CurrentStatData)
+	{
+		MaxHP = CurrentStatData->MaxHP;
+		CurrentHP = MaxHP;
+		MaxMP = CurrentStatData->MaxMP;
+		CurrentMP = CurrentStatData->CurrentMP;
+		AttackDamage = CurrentStatData->AttackDamage;
+		AbilityPower = CurrentStatData->AbilityPower;
+		Defense = CurrentStatData->Defense;
+		MagicResistance = CurrentStatData->MagicResistance;
+		AttackSpeed = CurrentStatData->AttackSpeed;
+		Range = CurrentStatData->Range;
+		CriticalRate = CurrentStatData->CriticalRate;
+		CriticalCoefficient = CurrentStatData->CriticalCoefficient;return;
+	}
 }

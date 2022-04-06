@@ -9,5 +9,11 @@ AJoJo::AJoJo()
 	Star = 1;
 	Country = ECountry::WE;
 	Synergy.Emplace(ESynergy::GWANUFANCLUB);
+}
+
+void AJoJo::BeginPlay()
+{
+	Super::BeginPlay();
+
 	ChampionStat->InitStatData(SerialNumber);
 }
