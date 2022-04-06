@@ -52,7 +52,7 @@ private:
 	int32 Range;
 
 	UPROPERTY(Transient, EditAnywhere, Category = "Stat", meta = (AllowPrivateAccess = true))
-	int32 CriticalRate;
+	float CriticalRate;
 
 	UPROPERTY(Transient, EditAnywhere, Category = "Stat", meta = (AllowPrivateAccess = true))
 	float CriticalCoefficient;

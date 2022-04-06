@@ -14,7 +14,7 @@ UChampionStatComponent::UChampionStatComponent()
 	MagicResistance = 0;
 	AttackSpeed = 0.0f;
 	Range = 0;
-	CriticalRate = 0;
+	CriticalRate = 0.0f;
 	CriticalCoefficient = 0.0f;
 }
 
