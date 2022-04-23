@@ -18,6 +18,7 @@ protected:
 
 	void MakeHexGrid(int32 OriginIndex);
 	void MakeChampionLocker(int32 OriginIndex);
+	void MakeItemLocker(int32 OriginIndex);
 	void MakeInterestIndicator(int32 OriginIndex);
 
 protected:
@@ -42,6 +43,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "HexGrid|Setup")
 	TSubclassOf<ATile> HexTile;
+
+	UPROPERTY(EditAnywhere, Category = "HexGrid|Setup")
+	TSubclassOf<ATile> HalfSquareTile;
 
 	UPROPERTY(EditAnywhere, Category = "HexGrid|Setup")
 	TSubclassOf<ATile> SquareTile;
