@@ -1,6 +1,7 @@
 #include "Champion/JoJo.h"
+#include "Skill/JoJoSkill.h"
 #include "Champion/ChampionStatComponent.h"
-#include "Champion/ChampionSkillComponent.h"
+#include "Skill/ChampionSkillComponent.h"
 
 AJoJo::AJoJo()
 {
@@ -10,6 +11,7 @@ AJoJo::AJoJo()
 	Star = 1;
 	Country = ECountry::WE;
 	Synergy.Emplace(ESynergy::GWANUFANCLUB);
+	ChampionSkill = CreateDefaultSubobject<UJoJoSkill>(TEXT("CHAMPIONSKILL"));
 }
 
 void AJoJo::BeginPlay()
