@@ -1,5 +1,6 @@
 #include "Champion/JoJo.h"
 #include "Champion/ChampionStatComponent.h"
+#include "Champion/ChampionSkillComponent.h"
 
 AJoJo::AJoJo()
 {
@@ -16,4 +17,5 @@ void AJoJo::BeginPlay()
 	Super::BeginPlay();
 
 	ChampionStat->InitStatData(SerialNumber);
+	ChampionSkill->InitSkillData(SerialNumber);
 }
