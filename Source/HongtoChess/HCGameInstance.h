@@ -46,6 +46,24 @@ public:
 	float CriticalCoefficient;
 };
 
+USTRUCT(BlueprintType)
+struct FHCSkillData : public FTableRowBase
+{
+	GENERATED_BODY()
+
+public:
+	FHCSkillData() : Name(TEXT("AAA")), Explanation(TEXT("exp")), DefaultDamage(0) {}
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "SkillData")
+	FString Name;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "SkillData")
+	FString Explanation;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "SkillData")
+	int32 DefaultDamage;
+};
+
 UCLASS()
 class HONGTOCHESS_API UHCGameInstance : public UGameInstance
 {
@@ -55,8 +73,11 @@ public:
 	UHCGameInstance();
 
 	FHCStatData* GetHCStatData(int32 SerialNumber);
-
+	FHCSkillData* GetHCSkillData(int32 SerialNumber);
 private:
 	UPROPERTY()
 	UDataTable* HCStatDataTable;
+
+	UPROPERTY()
+	UDataTable* HCSkillDataTable;
 };

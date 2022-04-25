@@ -11,9 +11,24 @@ UHCGameInstance::UHCGameInstance()
 	{
 		UE_LOG(LogTemp, Error, TEXT("HCStatDataTable has NO data!"));
 	}
+
+	static ConstructorHelpers::FObjectFinder<UDataTable> DT_HCSKILL(TEXT("/Game/GameData/HCSkillData.HCSkillData"));
+	if (DT_HCSKILL.Succeeded())
+	{
+		HCSkillDataTable = DT_HCSKILL.Object;
+	}
+	if (HCSkillDataTable->GetRowMap().Num() <= 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("HCSkillDataTable has NO data!"));
+	}
 }
 
 FHCStatData* UHCGameInstance::GetHCStatData(int32 SerialNumber)
 {
 	return HCStatDataTable->FindRow<FHCStatData>(*FString::FromInt(SerialNumber),TEXT(""));
+}
+
+FHCSkillData* UHCGameInstance::GetHCSkillData(int32 SerialNumber)
+{
+	return HCSkillDataTable->FindRow<FHCSkillData>(*FString::FromInt(SerialNumber), TEXT(""));
 }
