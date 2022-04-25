@@ -5,6 +5,7 @@
 
 class UTexture2D;
 class UChampionStatComponent;
+class UChampionSkillComponent;
 
 UENUM()
 enum class ECountry : uint8
@@ -62,8 +63,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Stat")
 	UChampionStatComponent* ChampionStat;
 	
-	//UPROPERTY(VisibleDefaultsOnly, Category = "Skill")
-	//USkill Skill;
+	UPROPERTY(VisibleDefaultsOnly, Category = "Skill")
+	UChampionSkillComponent* ChampionSkill;
 
 	//UPROPERTY(EditAnywhere, Category = "Item")
 	//TArray<UItem*> Item;
