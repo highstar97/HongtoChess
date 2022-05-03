@@ -16,6 +16,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	void MakeCircleGrid();
 	void MakeHexGrid(int32 OriginIndex);
 	void MakeChampionLocker(int32 OriginIndex);
 	void MakeItemLocker(int32 OriginIndex);
