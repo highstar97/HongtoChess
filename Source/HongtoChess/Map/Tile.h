@@ -22,7 +22,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Tile")
 	UStaticMeshComponent* TileMesh;
 
-	// 필요 없을지도?
+	// Maybe Don't Need
 	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Champion")
 	//UChampion* Champion = nullptr;
 };
