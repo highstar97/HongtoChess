@@ -6,6 +6,7 @@
 class UTexture2D;
 class UChampionStatComponent;
 class UChampionSkillComponent;
+class UGridMovementComponent;
 
 UENUM()
 enum class ECountry : uint8
@@ -65,6 +66,9 @@ protected:
 	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Skill")
 	UChampionSkillComponent* ChampionSkill;
+
+	UPROPERTY(EditInstanceOnly, Category = "Movement")
+	UGridMovementComponent* GridMovement;
 
 	//UPROPERTY(EditAnywhere, Category = "Item")
 	//TArray<UItem*> Item;
