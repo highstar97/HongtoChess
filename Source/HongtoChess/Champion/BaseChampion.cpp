@@ -5,6 +5,12 @@
 
 ABaseChampion::ABaseChampion() : SerialNumber(0), PlayerNumber(0), Name(TEXT("None")), Cost(0), Star(0), Country(ECountry::NONE)
 {
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SK_MANNEQUIN(TEXT("/Game/ARPG_Warrior/Demo/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"));
+	if (SK_MANNEQUIN.Succeeded())
+	{
+		GetMesh()->SetSkeletalMesh(SK_MANNEQUIN.Object);
+	}
+
 	Synergy.Empty();
 	ChampionStat = CreateDefaultSubobject<UChampionStatComponent>(TEXT("CHAMPIONSTAT"));
 	ChampionSkill = nullptr;
