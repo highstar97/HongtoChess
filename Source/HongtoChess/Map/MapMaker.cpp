@@ -16,12 +16,6 @@ AMapMaker::AMapMaker()
 	}
 }
 
-void AMapMaker::MakeCircleGrid()
-{
-	ATile* NewTile = GetWorld()->SpawnActor<ATile>(CircleTile, FVector(0, 0, 0), FRotator::ZeroRotator);
-	NewTile->SetActorScale3D(FVector(20.0f,20.0f,2.0f));
-}
-
 void AMapMaker::BeginPlay()
 {
 	Super::BeginPlay();
@@ -34,6 +28,12 @@ void AMapMaker::BeginPlay()
 		MakeItemLocker(i);
 		MakeInterestIndicator(i);
 	}
+}
+
+void AMapMaker::MakeCircleGrid()
+{
+	ATile* NewTile = GetWorld()->SpawnActor<ATile>(CircleTile, FVector(0, 0, 0), FRotator::ZeroRotator);
+	NewTile->SetActorScale3D(FVector(20.0f,20.0f,2.0f));
 }
 
 void AMapMaker::MakeHexGrid(int32 OriginIndex)
