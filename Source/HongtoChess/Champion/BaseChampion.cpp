@@ -14,7 +14,6 @@ ABaseChampion::ABaseChampion() : SerialNumber(0), PlayerNumber(0), Name(TEXT("No
 	Synergy.Empty();
 	ChampionStat = CreateDefaultSubobject<UChampionStatComponent>(TEXT("CHAMPIONSTAT"));
 	ChampionSkill = nullptr;
-	GridMovement = CreateDefaultSubobject<UGridMovementComponent>(TEXT("GRIDMOVEMENT"));
 }
 
 void ABaseChampion::BeginPlay()
@@ -34,5 +33,5 @@ void ABaseChampion::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 // Attack = Is Dead ? Find Target : Attack
 void ABaseChampion::FindTarget()
 {
-	ChampionStat->GetRange();
+	
 }

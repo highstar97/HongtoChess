@@ -6,7 +6,6 @@
 class UTexture2D;
 class UChampionStatComponent;
 class UChampionSkillComponent;
-class UGridMovementComponent;
 
 UENUM()
 enum class ECountry : uint8
