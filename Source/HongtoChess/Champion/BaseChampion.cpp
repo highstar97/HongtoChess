@@ -1,7 +1,6 @@
 #include "Champion/BaseChampion.h"
 #include "Champion/ChampionStatComponent.h"
 #include "Skill/ChampionSkillComponent.h"
-#include "Map/GridMovementComponent.h"
 #include "Engine/Texture2D.h"
 
 ABaseChampion::ABaseChampion() : SerialNumber(0), PlayerNumber(0), Name(TEXT("None")), Cost(0), Star(0), Country(ECountry::NONE)
@@ -28,4 +27,12 @@ void ABaseChampion::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+// Find Target
+// Loop[ Can Attack ? Attack : Move To Target ]
+// Attack = Is Dead ? Find Target : Attack
+void ABaseChampion::FindTarget()
+{
+	ChampionStat->GetRange();
 }

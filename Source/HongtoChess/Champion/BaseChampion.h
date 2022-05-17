@@ -39,6 +39,8 @@ protected:
 public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void FindTarget();
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Champion")
 	int32 SerialNumber;
@@ -66,9 +68,6 @@ protected:
 	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Skill")
 	UChampionSkillComponent* ChampionSkill;
-
-	UPROPERTY(EditInstanceOnly, Category = "Movement")
-	UGridMovementComponent* GridMovement;
 
 	//UPROPERTY(EditAnywhere, Category = "Item")
 	//TArray<UItem*> Item;
