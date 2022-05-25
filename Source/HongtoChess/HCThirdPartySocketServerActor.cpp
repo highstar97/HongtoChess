@@ -42,26 +42,27 @@ void AHCThirdPartySocketServerActor::Start()
 	if (!connected)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Fail to Connect!"));
+		return;
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Success to Connect!"));
 		ConnectionSocket = Socket;
-	}
 
-	FString VarFetch = TEXT("abcdefgf");
-	TCHAR* VarFetchChar = VarFetch.GetCharArray().GetData();
-	int32 size = FCString::Strlen(VarFetchChar);
-	int32 sent = 0;
+		FString VarFetch = TEXT("abcdefgf");
+		TCHAR* VarFetchChar = VarFetch.GetCharArray().GetData();
+		int32 size = FCString::Strlen(VarFetchChar);
+		int32 sent = 0;
 
-	bool successful = Socket->Send((uint8*)TCHAR_TO_UTF8(VarFetchChar), size, sent);
-	if (!successful)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Fail to send message"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Success to send message"));
+		bool successful = Socket->Send((uint8*)TCHAR_TO_UTF8(VarFetchChar), size, sent);
+		if (!successful)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Fail to send message"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Success to send message"));
+		}
 	}
 }
 
@@ -71,6 +72,12 @@ void AHCThirdPartySocketServerActor::GetMessage()
 
 	int32 index = 0;
 	uint32 Size;
+
+	if (!ConnectionSocket)
+	{
+		return;
+	}
+
 	while (ConnectionSocket->HasPendingData(Size))
 	{
 		ReceivedData.Init(1, FMath::Min(Size, 65507u));
