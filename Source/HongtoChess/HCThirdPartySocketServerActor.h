@@ -4,6 +4,7 @@
 #include "HCThirdPartySocketServerActor.generated.h"
 
 class FSocket;
+
 UCLASS()
 class HONGTOCHESS_API AHCThirdPartySocketServerActor : public AActor
 {
@@ -14,7 +15,7 @@ public:
 
 private:
 	FSocket* ConnectionSocket = nullptr;
-	
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -23,4 +24,5 @@ public:
 
 	void Start();
 	void GetMessage();
+	void Test();
 };

@@ -59,3 +59,13 @@ void UChampionStatComponent::InitStatData(int SerialNumber)
 		CriticalCoefficient = CurrentStatData->CriticalCoefficient;return;
 	}
 }
+
+float UChampionStatComponent::GetAttackSpeed()
+{
+	return AttackSpeed;
+}
+
+int32 UChampionStatComponent::GetRange()
+{
+	return Range;
+}

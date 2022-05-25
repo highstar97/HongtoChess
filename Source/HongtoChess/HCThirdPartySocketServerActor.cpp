@@ -13,7 +13,6 @@ AHCThirdPartySocketServerActor::AHCThirdPartySocketServerActor()
 void AHCThirdPartySocketServerActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
 	Start();
 }
 
@@ -50,7 +49,7 @@ void AHCThirdPartySocketServerActor::Start()
 		ConnectionSocket = Socket;
 	}
 
-	FString VarFetch = TEXT("fromjjh");
+	FString VarFetch = TEXT("abcdefgf");
 	TCHAR* VarFetchChar = VarFetch.GetCharArray().GetData();
 	int32 size = FCString::Strlen(VarFetchChar);
 	int32 sent = 0;
@@ -96,5 +95,28 @@ void AHCThirdPartySocketServerActor::GetMessage()
 				UE_LOG(LogTemp, Warning, TEXT("%s"), *frameAsFString);
 			}
 		}
+	}
+}
+
+void AHCThirdPartySocketServerActor::Test()
+{
+	if (!ConnectionSocket)
+	{
+		return;
+	}
+
+	FString VarFetch = TEXT("xyz");
+	TCHAR* VarFetchChar = VarFetch.GetCharArray().GetData();
+	int32 size = FCString::Strlen(VarFetchChar);
+	int32 sent = 0;
+
+	bool successful = ConnectionSocket->Send((uint8*)TCHAR_TO_UTF8(VarFetchChar), size, sent);
+	if (!successful)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Fail to send message"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Success to send message"));
 	}
 }
