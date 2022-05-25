@@ -1,7 +1,7 @@
+#include "HCThirdPartySocketServerActor.h"
 #include "SocketSubsystem.h"
 #include "Interfaces/IPv4/IPv4Address.h"
 #include "Networking.h"
-#include "HCThirdPartySocketServerActor.h"
 #include <string>
 
 AHCThirdPartySocketServerActor::AHCThirdPartySocketServerActor()
