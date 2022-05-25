@@ -14,8 +14,6 @@ public:
 	UMapData();
 
 public:
-	TArray<TArray<int32>> AdjacencyHexGridData;
-
 	TArray<TArray<UBaseChampion*>> HexGridData;
 
 	TArray<UBaseChampion*> MyChampionLocker;

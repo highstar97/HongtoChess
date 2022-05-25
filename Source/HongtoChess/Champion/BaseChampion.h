@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameFramework/Character.h"
+#include "GameFramework/FloatingPawnMovement.h"
 #include "BaseChampion.generated.h"
 
 class UTexture2D;
@@ -36,9 +37,16 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void PostInitializeComponents() override;
+
+	void SetOnHexTile(int32 _PlayerNumber, int32 _LocationNumber);
 
 	void FindTarget();
+	void MoveToTarget();
+	void Attack();
+	bool CanAttack();
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Champion")
@@ -70,4 +78,11 @@ protected:
 
 	//UPROPERTY(EditAnywhere, Category = "Item")
 	//TArray<UItem*> Item;
+
+	UPROPERTY(EditAnywhere, Category = "Map")
+	int32 LocationNumber = -1;
+
+	float AttackCoolTime = 0.0f;
+
+	ABaseChampion* Target = nullptr;
 };

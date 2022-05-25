@@ -21,6 +21,9 @@ public:
 
 	void InitStatData(int SerialNumber);
 
+	float GetAttackSpeed();
+	int32 GetRange();
+
 public:
 	FHCStatData* CurrentStatData = nullptr;
 

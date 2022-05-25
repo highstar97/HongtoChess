@@ -57,7 +57,7 @@ void AMapMaker::MakeHexGrid(int32 OriginIndex)
 
 			ATile* NewTile = GetWorld()->SpawnActor<ATile>(HexTile, Adjusted + FVector(FIntPoint(xPos, yPos)), FRotator::ZeroRotator);
 			NewTile->TileIndex = FIntPoint(x-4, y);
-			NewTile->SetActorLabel(FString::Printf(TEXT("PC%d's\n(%d,%d)"), OriginIndex, x - 4, y));
+			NewTile->SetActorLabel(FString::Printf(TEXT("PC%d%d%d"), OriginIndex, x - 4, y));
 			HexGrid2DArray[x][y] = NewTile;
 		}
 	}
