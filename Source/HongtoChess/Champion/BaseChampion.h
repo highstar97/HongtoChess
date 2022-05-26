@@ -7,6 +7,8 @@
 class UTexture2D;
 class UChampionStatComponent;
 class UChampionSkillComponent;
+class AHCGameMode;
+class AHCGameState;
 
 UENUM()
 enum class ECountry : uint8
@@ -38,6 +40,7 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
+	void PostInitializeComponents() override;
 
 	int32 GetPlayerNumber() { return PlayerNumber; }
 
@@ -86,4 +89,8 @@ protected:
 	float AttackCoolTime = 0.0f;
 
 	ABaseChampion* Target = nullptr;
+
+	AHCGameMode* HCGameMode;
+
+	AHCGameState* HCGameState;
 };

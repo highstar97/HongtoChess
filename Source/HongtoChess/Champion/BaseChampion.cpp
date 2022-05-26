@@ -55,6 +55,22 @@ void ABaseChampion::Tick(float DeltaTime)
 	}
 }
 
+void ABaseChampion::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	HCGameMode = Cast<AHCGameMode>(GetWorld()->GetAuthGameMode());
+	if (!HCGameMode)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BaseChampion Can't Access to HCGameMode"));
+	}
+	HCGameState = Cast<AHCGameState>(UGameplayStatics::GetGameState(this));
+	if (!HCGameState)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BaseChampion Can't Access to HCGameState"));
+	};
+}
+
 void ABaseChampion::SetOnTile(int32 _PlayerNumber, int32 _LocationNumber)
 {
 	if (LocationNumber < 0)
@@ -102,12 +118,6 @@ void ABaseChampion::SetOnHexTile(int32 _PlayerNumber, int32 _LocationNumber)
 		}
 	}
 
-	auto HCGameState = Cast<AHCGameState>(UGameplayStatics::GetGameState(this));
-	if (!HCGameState)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("BaseChampion Can't Access to HCGameState"));
-		return;
-	}
 	HCGameState->GetMapData()->RecordChampionLocation(this, _LocationNumber);
 }
 
@@ -116,14 +126,7 @@ void ABaseChampion::FindTarget()
 	// BFS탐색 하면서 발견 시 Target으로 삼기
 	// 현재위치에서  한칸 떨어진 곳에 PlayerNumber가 다른 Champion이 있는지 HCPlayerState->GetMapData()에서 확인
 	// 있다면 Target으로, 없다면 한 칸 더 떨어진 곳을 탐색
-	auto HCGameMode = Cast<AHCGameMode>(GetWorld()->GetAuthGameMode());
 	UAdjancencyHexGridData* AdjancencyHexGridData = HCGameMode->GetAdjancencyHexGridData();
-	auto HCGameState = Cast<AHCGameState>(UGameplayStatics::GetGameState(this));
-	if (!HCGameState)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("BaseChampion Can't Access to HCGameState"));
-		return;
-	}
 
 	TQueue<int32> Queue;
 	TArray<bool> Visited;
@@ -160,15 +163,16 @@ void ABaseChampion::FindTarget()
 void ABaseChampion::MoveToTarget()
 {
 	// Target의 위치가 변경되었는지 확인
-	// 이동
+	// 최단거리 탐색 -> 이동
+	 
 }
 
 void ABaseChampion::Attack()
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s Attack!"), *GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("%s Attack!"), *GetName());
 	if (Target)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s FindTarget!, Target is %s"), *GetName(), *(Target->GetName()));
+		//UE_LOG(LogTemp, Warning, TEXT("%s FindTarget!, Target is %s"), *GetName(), *(Target->GetName()));
 		if (CanAttack())
 		{
 			// Attack 모션
