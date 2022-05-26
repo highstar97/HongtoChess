@@ -16,5 +16,24 @@ UMapData::UMapData()
 	EnemyInterest = 0;
 }
 
-// Loop[HexGridData]
-//		Champion -> Start
+void UMapData::RecordChampionLocation(ABaseChampion* Champion, int32 LocationNumber)
+{
+	HexGridData[LocationNumber / 7][LocationNumber % 7] = Champion;
+}
+
+ABaseChampion* UMapData::IsTarget(int32 MyPlayerNumber, int32 LocationNumber)
+{
+	ABaseChampion* Suspect = HexGridData[LocationNumber / 7][LocationNumber % 7];
+	if (nullptr == Suspect)
+	{
+		return nullptr;
+	}
+	else
+	{
+		if (MyPlayerNumber != Suspect->GetPlayerNumber())
+		{
+			return Suspect;
+		}
+		return nullptr;
+	}
+}

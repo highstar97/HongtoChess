@@ -11,6 +11,8 @@ class HONGTOCHESS_API UAdjancencyHexGridData : public UObject
 public:
 	UAdjancencyHexGridData();
 	
-public:
+	TArray<TArray<int32>> GetAdjacencyHexGridData() { return AdjacencyHexGridData; }
+
+private:
 	TArray<TArray<int32>> AdjacencyHexGridData;
 };
