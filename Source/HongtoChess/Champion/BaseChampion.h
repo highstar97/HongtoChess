@@ -38,9 +38,10 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	virtual void PostInitializeComponents() override;
 
+	int32 GetPlayerNumber() { return PlayerNumber; }
+
+	void SetOnTile(int32 _PlayerNumber, int32 _LocationNumber);
 	void SetOnHexTile(int32 _PlayerNumber, int32 _LocationNumber);
 
 	void FindTarget();
