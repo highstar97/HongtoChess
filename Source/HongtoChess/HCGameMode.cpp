@@ -8,7 +8,7 @@
 
 AHCGameMode::AHCGameMode()
 {
-	DefaultPawnClass = AHCPlayerCharacter::StaticClass();
+	//DefaultPawnClass = AHCPlayerCharacter::StaticClass();
 	PlayerControllerClass = AHCPlayerController::StaticClass();
 	PlayerStateClass = AHCPlayerState::StaticClass();
 	GameStateClass = AHCGameState::StaticClass();

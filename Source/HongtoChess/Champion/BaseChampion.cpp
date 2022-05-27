@@ -7,6 +7,7 @@
 #include "Map/AdjancencyHexGridData.h"
 #include "Skill/ChampionSkillComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "EngineUtils.h"						// TActorIterator
 #include "Engine/Texture2D.h"
 
 ABaseChampion::ABaseChampion() : SerialNumber(0), PlayerNumber(0), Name(TEXT("None")), Cost(0), Star(0), Country(ECountry::NONE)
@@ -40,7 +41,7 @@ void ABaseChampion::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetOnTile(PlayerNumber, LocationNumber);
+	SetOnTile(LocationNumber);	// Need to delete ( this is for testing )
 }
 
 void ABaseChampion::Tick(float DeltaTime)
@@ -48,7 +49,7 @@ void ABaseChampion::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	AttackCoolTime += DeltaTime;
-	if (AttackCoolTime >= 5/*1/ChampionStat->GetAttackSpeed()*/)
+	if (AttackCoolTime >= 10)//1/ChampionStat->GetAttackSpeed())
 	{
 		Attack();
 		AttackCoolTime = 0;
@@ -71,7 +72,7 @@ void ABaseChampion::PostInitializeComponents()
 	};
 }
 
-void ABaseChampion::SetOnTile(int32 _PlayerNumber, int32 _LocationNumber)
+void ABaseChampion::SetOnTile(int32 _LocationNumber)
 {
 	if (LocationNumber < 0)
 	{
@@ -81,7 +82,7 @@ void ABaseChampion::SetOnTile(int32 _PlayerNumber, int32 _LocationNumber)
 	{
 		// Is in field
 		// Set Location by PlayerNumber
-		SetOnHexTile(PlayerNumber, LocationNumber);
+		SetOnHexTile(LocationNumber);
 	}
 	else if (LocationNumber < 74)
 	{
@@ -93,25 +94,20 @@ void ABaseChampion::SetOnTile(int32 _PlayerNumber, int32 _LocationNumber)
 	}
 }
 
-void ABaseChampion::SetOnHexTile(int32 _PlayerNumber, int32 _LocationNumber)
+void ABaseChampion::SetOnHexTile(int32 _LocationNumber)
 {
-	TArray<AActor*> Tiles;
-	TSubclassOf<class ATile> FindClassType;
-	FindClassType = ATile::StaticClass();
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), FindClassType, Tiles);
-
 	FString TileName;
 	TileName += TEXT("PC");
-	TileName += FString::FromInt(_PlayerNumber);
+	TileName += FString::FromInt(PlayerNumber);
 	TileName += TEXT("HEX");
 	TileName += FString::FromInt(_LocationNumber / 7 - 4);
-	TileName += FString::FromInt(_LocationNumber % 7 + 1);
-	for (AActor* tile : Tiles)
+	TileName += FString::FromInt(_LocationNumber % 7);
+	for (TActorIterator<ATile> It(GetWorld()); It; ++It)
 	{
-		if (tile->GetName() == TileName)
+		if (It->GetName() == TileName)
 		{
-			this->SetActorLocation(tile->GetTransform().GetLocation() + FVector(0.0f, 0.0f, 20.0f));
-			if (_PlayerNumber == 8)
+			this->SetActorLocation(It->GetTransform().GetLocation() + FVector(0.0f, 0.0f, 20.0f));
+			if (PlayerNumber == 8)
 			{
 				this->SetActorRotation(FRotator(0.0f, 180.0f, 0.0f));
 			}
@@ -119,6 +115,7 @@ void ABaseChampion::SetOnHexTile(int32 _PlayerNumber, int32 _LocationNumber)
 	}
 
 	HCGameState->GetMapData()->RecordChampionLocation(this, _LocationNumber);
+	LocationNumber = _LocationNumber;
 }
 
 void ABaseChampion::FindTarget()
@@ -139,9 +136,9 @@ void ABaseChampion::FindTarget()
 	{
 		int32 CurrentLocation = *Queue.Peek();
 		//UE_LOG(LogTemp, Warning, TEXT("%d"), CurrentLocation);
-		for (int32 i = 0; i < AdjancencyHexGridData->GetAdjacencyHexGridData()[CurrentLocation].Num(); ++i)
+		for (int32 i = 0; i < AdjancencyHexGridData->GetAdjancencyHexGridData()[CurrentLocation].Num(); ++i)
 		{
-			int32 NextLocation = AdjancencyHexGridData->GetAdjacencyHexGridData()[CurrentLocation][i];
+			int32 NextLocation = AdjancencyHexGridData->GetAdjancencyHexGridData()[CurrentLocation][i];
 			Target = HCGameState->GetMapData()->IsTarget(PlayerNumber, NextLocation);
 			if (nullptr != Target)
 			{
@@ -164,18 +161,24 @@ void ABaseChampion::MoveToTarget()
 {
 	// Target의 위치가 변경되었는지 확인
 	// 최단거리 탐색 -> 이동
-	 
+	int32 Destination = HCGameState->GetMapData()->GetTargetLocationNumber(Target);
+	if (-1 == Destination)	// Target is Dead? or Can't Attack
+	{
+		FindTarget();
+	}
+	Move(GetNextTileToMove(Destination));
 }
 
 void ABaseChampion::Attack()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("%s Attack!"), *GetName());
+	UE_LOG(LogTemp, Warning, TEXT("%s Attack!"), *GetName());
 	if (Target)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("%s FindTarget!, Target is %s"), *GetName(), *(Target->GetName()));
+		UE_LOG(LogTemp, Warning, TEXT("%s FindTarget!, Target is %s"), *GetName(), *(Target->GetName()));
 		if (CanAttack())
 		{
 			// Attack 모션
+			UE_LOG(LogTemp, Warning, TEXT("%s can Attack!"), *GetName());
 		}
 		else
 		{
@@ -191,6 +194,49 @@ void ABaseChampion::Attack()
 bool ABaseChampion::CanAttack()
 {
 	// Target과의 거리와 사거리 고려
-	// 
+	int32 Range = ChampionStat->GetRange();
+	int32 TargetLocationNumber = HCGameState->GetMapData()->GetTargetLocationNumber(Target);
+	if (Range >= HCGameMode->GetAdjancencyHexGridData()->GetDistanceAtoB(LocationNumber, TargetLocationNumber))
+	{
+		return true;
+	}
 	return false;
+}
+
+int32 ABaseChampion::GetNextTileToMove(int32 Destination)
+{
+	UAdjancencyHexGridData* AdjancencyHexGridData = HCGameMode->GetAdjancencyHexGridData();
+	int32 NextTile = -1;
+	int32 Min = 1000;
+	for (int32 i = 0; i < AdjancencyHexGridData->GetAdjancencyHexGridData()[LocationNumber].Num(); ++i)
+	{
+		int32 AdjancencyLocation = AdjancencyHexGridData->GetAdjancencyHexGridData()[LocationNumber][i];
+		if (HCGameState->GetMapData()->IsCanMoveTile(AdjancencyLocation))
+		{
+			// AdjancencyLocation -> Destination 최단거리 구해서 DistanceToDestination에 저장
+			int32 Value = AdjancencyHexGridData->GetDistanceAtoB(AdjancencyLocation, Destination);
+			if (Min > Value)
+			{
+				Min = Value;
+				NextTile = AdjancencyLocation;
+			}
+		}
+	}
+
+	return NextTile;
+}
+
+void ABaseChampion::Move(int32 NextLocationNumber)
+{
+	
+	if (-1 == NextLocationNumber)
+	{
+		return;	// Can't Move Because of Other Champions
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("%s Move : %d -> %d"),*GetName(), LocationNumber, NextLocationNumber);
+	HCGameState->GetMapData()->UnRecordChampionLocation(LocationNumber);
+	// NextTileLocation을 향해 회전
+	// NextTileLocation을 향해 이동
+	HCGameState->GetMapData()->RecordChampionLocation(this, NextLocationNumber);
 }

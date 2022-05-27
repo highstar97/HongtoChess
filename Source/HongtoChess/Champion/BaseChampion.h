@@ -44,13 +44,16 @@ public:
 
 	int32 GetPlayerNumber() { return PlayerNumber; }
 
-	void SetOnTile(int32 _PlayerNumber, int32 _LocationNumber);
-	void SetOnHexTile(int32 _PlayerNumber, int32 _LocationNumber);
+	void SetOnTile(int32 _LocationNumber);
+	void SetOnHexTile(int32 _LocationNumber);
 
 	void FindTarget();
 	void MoveToTarget();
 	void Attack();
 	bool CanAttack();
+
+	int32 GetNextTileToMove(int32 Destination);
+	void Move(int32 NextLocationNumber);
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Champion")

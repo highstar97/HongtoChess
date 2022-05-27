@@ -10,9 +10,16 @@ class HONGTOCHESS_API UAdjancencyHexGridData : public UObject
 
 public:
 	UAdjancencyHexGridData();
-	
-	TArray<TArray<int32>> GetAdjacencyHexGridData() { return AdjacencyHexGridData; }
+
+	void InitAdjancencyHexGridData();
+	void InitDistanceData();
+
+	TArray<TArray<int32>> GetAdjancencyHexGridData() { return AdjancencyHexGridData; }
+
+	int32 GetDistanceAtoB(int32 LocationA, int32 LocationB);
 
 private:
-	TArray<TArray<int32>> AdjacencyHexGridData;
+	TArray<TArray<int32>> AdjancencyHexGridData;
+
+	TMap<int32, TArray<TArray<int32>>> DistanceData;
 };
