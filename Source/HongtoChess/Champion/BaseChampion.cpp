@@ -228,7 +228,6 @@ int32 ABaseChampion::GetNextTileToMove(int32 Destination)
 
 void ABaseChampion::Move(int32 NextLocationNumber)
 {
-	
 	if (-1 == NextLocationNumber)
 	{
 		return;	// Can't Move Because of Other Champions
@@ -236,7 +235,26 @@ void ABaseChampion::Move(int32 NextLocationNumber)
 
 	UE_LOG(LogTemp, Warning, TEXT("%s Move : %d -> %d"),*GetName(), LocationNumber, NextLocationNumber);
 	HCGameState->GetMapData()->UnRecordChampionLocation(LocationNumber);
+	LocationNumber = NextLocationNumber;
 	// NextTileLocation을 향해 회전
 	// NextTileLocation을 향해 이동
+	int32 Number = LocationNumber / 7 - 4 >= 0 ? 7 : 8;
+	FString TileName;
+	TileName += TEXT("PC");
+	TileName += FString::FromInt(Number);
+	TileName += TEXT("HEX");
+	TileName += FString::FromInt(LocationNumber / 7 - 4);
+	TileName += FString::FromInt(LocationNumber % 7);
+	for (TActorIterator<ATile> It(GetWorld()); It; ++It)
+	{
+		if (It->GetName() == TileName)
+		{
+			this->SetActorLocation(It->GetTransform().GetLocation() + FVector(0.0f, 0.0f, 20.0f));
+			if (PlayerNumber == 8)
+			{
+				this->SetActorRotation(FRotator(0.0f, 180.0f, 0.0f));
+			}
+		}
+	}
 	HCGameState->GetMapData()->RecordChampionLocation(this, NextLocationNumber);
 }
