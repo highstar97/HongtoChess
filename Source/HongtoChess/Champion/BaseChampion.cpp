@@ -3,6 +3,7 @@
 #include "Map/Tile.h"
 #include "Map/AdjancencyHexGridData.h"
 #include "Skill/ChampionSkillComponent.h"
+#include "HCAnimInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/Texture2D.h"
 
@@ -28,6 +29,8 @@ ABaseChampion::ABaseChampion() : SerialNumber(0), PlayerNumber(0), Name(TEXT("No
 	{
 		GetMesh()->SetAnimInstanceClass(BASECHARACTER_ANIM.Class);
 	}
+
+	IsAttacking = false;
 }
 
 void ABaseChampion::BeginPlay()
@@ -77,6 +80,15 @@ void ABaseChampion::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 void ABaseChampion::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	HCAnim = Cast<UHCAnimInstance>(GetMesh()->GetAnimInstance());
+	if (!HCAnim)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("no HCAnim"));
+	}
+
+	HCAnim->OnMontageEnded.AddDynamic(this, &ABaseChampion::OnAttackMontageEnded);
+
 }
 
 void ABaseChampion::SetOnHexTile(int32 _PlayerNumber, int32 _LocationNumber)
@@ -120,7 +132,13 @@ void ABaseChampion::Attack()
 	{
 		if (CanAttack())
 		{
-			// Attack 모션
+			if (IsAttacking)
+			{
+				return;
+			}
+			
+			HCAnim->PlayAttackMontage(ChampionStat->GetAttackSpeed());
+			IsAttacking = true;
 		}
 		else
 		{
@@ -130,6 +148,8 @@ void ABaseChampion::Attack()
 	else
 	{
 		FindTarget();
+		HCAnim->PlayAttackMontage(ChampionStat->GetAttackSpeed());
+		IsAttacking = true;
 	}
 }
 
@@ -138,4 +158,13 @@ bool ABaseChampion::CanAttack()
 	// Target과의 거리와 사거리 고려
 	// 
 	return false;
+}
+
+void ABaseChampion::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
+	if (!IsAttacking)
+	{
+		return;
+	}
+	IsAttacking = false;
 }

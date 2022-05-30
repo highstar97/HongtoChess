@@ -7,6 +7,7 @@
 class UTexture2D;
 class UChampionStatComponent;
 class UChampionSkillComponent;
+class UHCAnimInstance;
 
 UENUM()
 enum class ECountry : uint8
@@ -48,6 +49,9 @@ public:
 	void Attack();
 	bool CanAttack();
 
+	UFUNCTION()
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Champion")
 	int32 SerialNumber;
@@ -85,4 +89,10 @@ protected:
 	float AttackCoolTime = 0.0f;
 
 	ABaseChampion* Target = nullptr;
+
+private:
+	UHCAnimInstance* HCAnim;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	bool IsAttacking;
 };
