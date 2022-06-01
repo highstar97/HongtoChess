@@ -31,12 +31,12 @@ void AHCThirdPartySocketServerActor::Start()
 		UE_LOG(LogTemp, Warning, TEXT("Fail to Making Socket"));
 	}
 
-	FIPv4Address ip(211, 211, 7, 124);
-	int32 port = 1234;
+	FIPv4Address ip(112, 214, 27, 136);
+	int32 port = 8888;
 
 	TSharedRef<FInternetAddr> addr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
 	addr->SetIp(ip.Value);
-	addr->SetPort(1234);
+	addr->SetPort(port);
 
 	bool connected = Socket->Connect(*addr);
 	if (!connected)
@@ -49,7 +49,7 @@ void AHCThirdPartySocketServerActor::Start()
 		UE_LOG(LogTemp, Warning, TEXT("Success to Connect!"));
 		ConnectionSocket = Socket;
 
-		FString VarFetch = TEXT("abcdefgf");
+		FString VarFetch = TEXT("Client1 Hello");
 		TCHAR* VarFetchChar = VarFetch.GetCharArray().GetData();
 		int32 size = FCString::Strlen(VarFetchChar);
 		int32 sent = 0;
