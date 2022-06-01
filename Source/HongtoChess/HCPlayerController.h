@@ -13,6 +13,4 @@ public:
 	virtual void OnPossess(APawn* aPawn) override;
 
 	virtual void SetupInputComponent() override;
-
-	void Test();
 };

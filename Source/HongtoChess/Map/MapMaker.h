@@ -4,7 +4,11 @@
 #include "MapMaker.generated.h"
 
 class ATile;
-
+/*
+	Before Upgrade for 8 player, we make game for 2 player
+	So now, This code is for 2 Player ( JustForTwoPlayer()... )
+	If you want to change game for 8 player, Delete Some Function and Change BeginPlay()
+*/
 UCLASS()
 class HONGTOCHESS_API AMapMaker : public AActor
 {
@@ -21,6 +25,8 @@ protected:
 	void MakeChampionLocker(int32 OriginIndex);
 	void MakeItemLocker(int32 OriginIndex);
 	void MakeInterestIndicator(int32 OriginIndex);
+
+	void JustForTwoPlayer();
 
 protected:
 	TArray<FIntPoint> OriginArray;

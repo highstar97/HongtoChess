@@ -8,6 +8,8 @@ class UTexture2D;
 class UChampionStatComponent;
 class UChampionSkillComponent;
 class UHCAnimInstance;
+class AHCGameMode;
+class AHCGameState;
 
 UENUM()
 enum class ECountry : uint8
@@ -39,22 +41,25 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	virtual void PostInitializeComponents() override;
+	void PostInitializeComponents() override;
 
-	void SetOnHexTile(int32 _PlayerNumber, int32 _LocationNumber);
+	int32 GetPlayerNumber() { return PlayerNumber; }
+
+	void SetOnTile(int32 _LocationNumber);
+	void SetOnHexTile(int32 _LocationNumber);
 
 	void FindTarget();
 	void MoveToTarget();
 	void Attack();
 	bool CanAttack();
+	int32 GetNextTileToMove(int32 Destination);
+	void Move(int32 NextLocationNumber);
 
-	
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 
 	void AttackCheck();
-
+	
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Champion")
 	int32 SerialNumber;
@@ -95,6 +100,10 @@ protected:
 
 private:
 	UHCAnimInstance* HCAnim;
+
+	AHCGameMode* HCGameMode;
+
+	AHCGameState* HCGameState;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 	bool IsAttacking;

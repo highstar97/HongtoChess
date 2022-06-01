@@ -12,14 +12,14 @@ AJoJo::AJoJo()
 	Country = ECountry::WE;
 	Synergy.Emplace(ESynergy::GWANUFANCLUB);
 	ChampionSkill = CreateDefaultSubobject<UJoJoSkill>(TEXT("CHAMPIONSKILL"));
+
+	PlayerNumber = 8;	// Need to delete ( this is for testing )
+	LocationNumber = 4;	// Need to delete ( this is for testing )
 }
 
 void AJoJo::BeginPlay()
 {
 	Super::BeginPlay();
-
-	PlayerNumber = 1;	// Need to delete ( this is for testing )
-	LocationNumber = 4;	// Need to delete ( this is for testing )
 
 	ChampionStat->InitStatData(SerialNumber);
 	ChampionSkill->InitSkillData(SerialNumber);
