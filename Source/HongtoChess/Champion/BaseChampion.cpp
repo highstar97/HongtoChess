@@ -54,7 +54,7 @@ void ABaseChampion::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	AttackCoolTime += DeltaTime;
-	if (AttackCoolTime >= 10)//1/ChampionStat->GetAttackSpeed())
+	if (AttackCoolTime >= 1)//1/ChampionStat->GetAttackSpeed())
 	{
 		Attack();
 		AttackCoolTime = 0;
@@ -75,6 +75,13 @@ void ABaseChampion::PostInitializeComponents()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("BaseChampion Can't Access to HCGameState"));
 	};
+	HCAnim = Cast<UHCAnimInstance>(GetMesh()->GetAnimInstance());
+	if (!HCAnim)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("no HCAnim"));
+	}
+
+	HCAnim->OnMontageEnded.AddDynamic(this, &ABaseChampion::OnAttackMontageEnded);
 }
 
 void ABaseChampion::SetOnTile(int32 _LocationNumber)
@@ -101,36 +108,6 @@ void ABaseChampion::SetOnTile(int32 _LocationNumber)
 
 void ABaseChampion::SetOnHexTile(int32 _LocationNumber)
 {
-	Super::Tick(DeltaTime);
-	
-	AttackCoolTime += DeltaTime;
-	if (AttackCoolTime >= 1/*1/ChampionStat->GetAttackSpeed()*/)
-	{
-		Attack();
-		AttackCoolTime = 0;
-	}
-}
-
-void ABaseChampion::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
-void ABaseChampion::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-
-	HCAnim = Cast<UHCAnimInstance>(GetMesh()->GetAnimInstance());
-	if (!HCAnim)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("no HCAnim"));
-	}
-
-	HCAnim->OnMontageEnded.AddDynamic(this, &ABaseChampion::OnAttackMontageEnded);
-}
-
-void ABaseChampion::SetOnHexTile(int32 _PlayerNumber, int32 _LocationNumber)
-{
 	FString TileName;
 	TileName += TEXT("PC");
 	TileName += FString::FromInt(PlayerNumber);
@@ -155,9 +132,9 @@ void ABaseChampion::SetOnHexTile(int32 _PlayerNumber, int32 _LocationNumber)
 
 void ABaseChampion::FindTarget()
 {
-	// BFSÅ½ï¿½ï¿½ ï¿½Ï¸é¼­ ï¿½ß°ï¿½ ï¿½ï¿½ Targetï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½Ä­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ PlayerNumberï¿½ï¿½ ï¿½Ù¸ï¿½ Championï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ HCPlayerState->GetMapData()ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
-	// ï¿½Ö´Ù¸ï¿½ Targetï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ Ä­ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å½ï¿½ï¿½
+	// BFSÅ½»ö ÇÏ¸é¼­ ¹ß°ß ½Ã TargetÀ¸·Î »ï±â
+	// ÇöÀçÀ§Ä¡¿¡¼­  ÇÑÄ­ ¶³¾îÁø °÷¿¡ PlayerNumber°¡ ´Ù¸¥ ChampionÀÌ ÀÖ´ÂÁö HCPlayerState->GetMapData()¿¡¼­ È®ÀÎ
+	// ÀÖ´Ù¸é TargetÀ¸·Î, ¾ø´Ù¸é ÇÑ Ä­ ´õ ¶³¾îÁø °÷À» Å½»ö
 	UAdjancencyHexGridData* AdjancencyHexGridData = HCGameMode->GetAdjancencyHexGridData();
 
 	TQueue<int32> Queue;
@@ -194,8 +171,8 @@ void ABaseChampion::FindTarget()
 
 void ABaseChampion::MoveToTarget()
 {
-	// Targetï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
-	// ï¿½Ö´Ü°Å¸ï¿½ Å½ï¿½ï¿½ -> ï¿½Ìµï¿½
+	// TargetÀÇ À§Ä¡°¡ º¯°æµÇ¾ú´ÂÁö È®ÀÎ
+	// ÃÖ´Ü°Å¸® Å½»ö -> ÀÌµ¿
 	int32 Destination = HCGameState->GetMapData()->GetTargetLocationNumber(Target);
 	if (-1 == Destination)	// Target is Dead? or Can't Attack
 	{
@@ -209,7 +186,7 @@ void ABaseChampion::Attack()
 	UE_LOG(LogTemp, Warning, TEXT("%s Attack!"), *GetName());
 	if (Target)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s FindTarget!, Target is %s"), *GetName(), *(Target->GetName()));
+		UE_LOG(LogTemp, Warning, TEXT("%s Find Target!, Target is %s"), *GetName(), *(Target->GetName()));
 		if (CanAttack())
 		{
 			if (IsAttacking)
@@ -228,14 +205,12 @@ void ABaseChampion::Attack()
 	else
 	{
 		FindTarget();
-		HCAnim->PlayAttackMontage(ChampionStat->GetAttackSpeed());
-		IsAttacking = true;
 	}
 }
 
 bool ABaseChampion::CanAttack()
 {
-	// Targetï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+	// Target°úÀÇ °Å¸®¿Í »ç°Å¸® °í·Á
 	int32 Range = ChampionStat->GetRange();
 	int32 TargetLocationNumber = HCGameState->GetMapData()->GetTargetLocationNumber(Target);
 	if (Range >= HCGameMode->GetAdjancencyHexGridData()->GetDistanceAtoB(LocationNumber, TargetLocationNumber))
@@ -264,7 +239,7 @@ int32 ABaseChampion::GetNextTileToMove(int32 Destination)
 		int32 AdjancencyLocation = AdjancencyHexGridData->GetAdjancencyHexGridData()[LocationNumber][i];
 		if (HCGameState->GetMapData()->IsCanMoveTile(AdjancencyLocation))
 		{
-			// AdjancencyLocation -> Destination ï¿½Ö´Ü°Å¸ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ DistanceToDestinationï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+			// AdjancencyLocation -> Destination ÃÖ´Ü°Å¸® ±¸ÇØ¼­ DistanceToDestination¿¡ ÀúÀå
 			int32 Value = AdjancencyHexGridData->GetDistanceAtoB(AdjancencyLocation, Destination);
 			if (Min > Value)
 			{
@@ -287,8 +262,8 @@ void ABaseChampion::Move(int32 NextLocationNumber)
 	UE_LOG(LogTemp, Warning, TEXT("%s Move : %d -> %d"),*GetName(), LocationNumber, NextLocationNumber);
 	HCGameState->GetMapData()->UnRecordChampionLocation(LocationNumber);
 	LocationNumber = NextLocationNumber;
-	// NextTileLocationï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½
-	// NextTileLocationï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
+	// NextTileLocationÀ» ÇâÇØ È¸Àü
+	// NextTileLocationÀ» ÇâÇØ ÀÌµ¿
 	int32 Number = LocationNumber / 7 - 4 >= 0 ? 7 : 8;
 	FString TileName;
 	TileName += TEXT("PC");
