@@ -4,6 +4,7 @@
 #include "Map/AdjancencyHexGridData.h"
 #include "Skill/ChampionSkillComponent.h"
 #include "HCAnimInstance.h"
+#include "Components/CapsuleComponent.h"//
 #include "Kismet/GameplayStatics.h"
 #include "Engine/Texture2D.h"
 
@@ -31,6 +32,8 @@ ABaseChampion::ABaseChampion() : SerialNumber(0), PlayerNumber(0), Name(TEXT("No
 	}
 
 	IsAttacking = false;
+
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("BaseChampion"));
 }
 
 void ABaseChampion::BeginPlay()
@@ -88,7 +91,6 @@ void ABaseChampion::PostInitializeComponents()
 	}
 
 	HCAnim->OnMontageEnded.AddDynamic(this, &ABaseChampion::OnAttackMontageEnded);
-
 }
 
 void ABaseChampion::SetOnHexTile(int32 _PlayerNumber, int32 _LocationNumber)

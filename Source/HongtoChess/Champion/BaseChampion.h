@@ -49,8 +49,11 @@ public:
 	void Attack();
 	bool CanAttack();
 
+	
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
+	void AttackCheck();
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Champion")
