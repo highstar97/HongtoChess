@@ -7,6 +7,8 @@
 class UTexture2D;
 class UChampionStatComponent;
 class UChampionSkillComponent;
+class AHCGameMode;
+class AHCGameState;
 
 UENUM()
 enum class ECountry : uint8
@@ -38,15 +40,20 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	virtual void PostInitializeComponents() override;
+	void PostInitializeComponents() override;
 
-	void SetOnHexTile(int32 _PlayerNumber, int32 _LocationNumber);
+	int32 GetPlayerNumber() { return PlayerNumber; }
+
+	void SetOnTile(int32 _LocationNumber);
+	void SetOnHexTile(int32 _LocationNumber);
 
 	void FindTarget();
 	void MoveToTarget();
 	void Attack();
 	bool CanAttack();
+
+	int32 GetNextTileToMove(int32 Destination);
+	void Move(int32 NextLocationNumber);
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Champion")
@@ -85,4 +92,8 @@ protected:
 	float AttackCoolTime = 0.0f;
 
 	ABaseChampion* Target = nullptr;
+
+	AHCGameMode* HCGameMode;
+
+	AHCGameState* HCGameState;
 };

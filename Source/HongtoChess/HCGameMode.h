@@ -3,7 +3,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "HCGameMode.generated.h"
 
-class AHCThirdPartySocketServerActor;
+//class AHCThirdPartySocketServerActor;
+class UAdjancencyHexGridData;
 
 UCLASS()
 class HONGTOCHESS_API AHCGameMode : public AGameModeBase
@@ -15,7 +16,8 @@ public:
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 
-	AHCThirdPartySocketServerActor* GetTPSocket() { return TPSocket; }
+	//AHCThirdPartySocketServerActor* GetTPSocket() { return TPSocket; }
+	UAdjancencyHexGridData* GetAdjancencyHexGridData() { return AdjancencyHexGridData; }
 
 private:
 	UPROPERTY()
@@ -24,6 +26,9 @@ private:
 	UPROPERTY()
 	int32 SmallRound;
 
+	//UPROPERTY()
+	//AHCThirdPartySocketServerActor* TPSocket;
+
 	UPROPERTY()
-	AHCThirdPartySocketServerActor* TPSocket;
+	UAdjancencyHexGridData* AdjancencyHexGridData = nullptr;
 };

@@ -16,5 +16,57 @@ UMapData::UMapData()
 	EnemyInterest = 0;
 }
 
-// Loop[HexGridData]
-//		Champion -> Start
+void UMapData::UnRecordChampionLocation(int32 LocationNumber)
+{
+	HexGridData[LocationNumber / 7][LocationNumber % 7] = nullptr;
+}
+
+void UMapData::RecordChampionLocation(ABaseChampion* Champion, int32 LocationNumber)
+{
+	HexGridData[LocationNumber / 7][LocationNumber % 7] = Champion;
+}
+
+ABaseChampion* UMapData::IsTarget(int32 MyPlayerNumber, int32 LocationNumber)
+{
+	ABaseChampion* Suspect = HexGridData[LocationNumber / 7][LocationNumber % 7];
+	if (nullptr == Suspect)
+	{
+		return nullptr;
+	}
+	else
+	{
+		if (MyPlayerNumber != Suspect->GetPlayerNumber())
+		{
+			return Suspect;
+		}
+		return nullptr;
+	}
+}
+
+int32 UMapData::GetTargetLocationNumber(ABaseChampion* Target)
+{
+	for (int32 i = 0; i < HexGridData.Num(); ++i)
+	{
+		for (int32 j = 0; j < HexGridData[i].Num(); ++j)
+		{
+			if (Target == HexGridData[i][j])
+			{
+				return i * 7 + j;
+			}
+		}
+	}
+	return -1; // Can't Find Target, Because Target is Dead? or Can't Attack.
+}
+
+bool UMapData::IsCanMoveTile(int32 LocationNumber)
+{
+	ABaseChampion* Destination = HexGridData[LocationNumber / 7][LocationNumber % 7];
+	if (nullptr == Destination)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
