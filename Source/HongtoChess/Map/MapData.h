@@ -24,9 +24,9 @@ public:
 
 	TArray<ABaseChampion*> MyChampionLocker;
 
-	int MyInterest;
+	int32 MyInterest;
 
 	TArray<ABaseChampion*> EnemyChampionLocker;
 
-	int EnemyInterest;
+	int32 EnemyInterest;
 };
