@@ -54,7 +54,7 @@ void ABaseChampion::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	
 	AttackCoolTime += DeltaTime;
-	if (AttackCoolTime >= 1)//1/ChampionStat->GetAttackSpeed())
+	if (AttackCoolTime >= 3)//1/ChampionStat->GetAttackSpeed())
 	{
 		Attack();
 		AttackCoolTime = 0;
